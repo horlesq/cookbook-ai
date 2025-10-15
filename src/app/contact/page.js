@@ -56,8 +56,7 @@ export default function Page() {
                     href={developerInfo.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 bg-gray-100 rounded-2xl shadow-md
-                             hover:shadow-lg transition-shadow duration-200 group"
+                    className="card-item"
                 >
                     <div className="flex-shrink-0">
                         <Github className="text-secondary" size={40} />
@@ -76,8 +75,7 @@ export default function Page() {
                     href={developerInfo.portfolio}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 bg-gray-100 rounded-2xl shadow-md
-                             hover:shadow-lg transition-shadow duration-200 group"
+                    className="card-item"
                 >
                     <div className="flex-shrink-0">
                         <Globe className="text-primary" size={40} />
@@ -96,8 +94,7 @@ export default function Page() {
                     href={developerInfo.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-4 p-4 bg-gray-100 rounded-2xl shadow-md
-                             hover:shadow-lg transition-shadow duration-200 group"
+                    className="card-item"
                 >
                     <div className="flex-shrink-0">
                         <Linkedin className="text-secondary" size={40} />
