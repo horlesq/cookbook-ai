@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import SearchBar from "@/components/SerachBar";
 import List from "@/components/List";
 
-
 const suggestedRecipes = [
     {
         id: 5,
@@ -66,7 +65,7 @@ export default function SearchResultsPage() {
     };
 
     return (
-        <div className="max-w-xl lg:max-w-2xl mx-auto space-y-12 pb-16 md:pb-24 lg:pb-32">
+        <div className="page-container">
             <SearchBar onSearch={handleSearch} initialQuery={initialQuery} />
 
             <List
@@ -78,10 +77,7 @@ export default function SearchResultsPage() {
             />
 
             <div className="text-center">
-                <button
-                    onClick={handleDislike}
-                    className="px-6 py-3 rounded-xl text-white font-medium transition-colors duration-200 bg-primary hover:bg-secondary"
-                >
+                <button onClick={handleDislike} className="btn-primary">
                     I don&apos;t like these
                 </button>
             </div>

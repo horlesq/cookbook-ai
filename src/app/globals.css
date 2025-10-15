@@ -18,6 +18,22 @@ body::-webkit-scrollbar {
 }
 
 @layer components {
+    .btn-primary {
+        @apply px-8 py-3 rounded-full bg-primary  text-white font-bold text-lg shadow-lg transition duration-300;
+    }
+    .btn-primary:hover {
+        background-color: theme("colors.secondary");
+        opacity: 0.9;
+    }
+
+    .page-container {
+        @apply max-w-xl lg:max-w-2xl mx-auto space-y-12 pb-16 md:pb-24 lg:pb-32;
+    }
+
+    .card-item {
+        @apply flex items-center gap-4 p-4 bg-gray-100 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer;
+    }
+
     .spinner {
         margin: 3.2rem auto 1.6rem;
         width: 60px;

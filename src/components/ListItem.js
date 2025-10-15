@@ -17,8 +17,7 @@ export default function ListItem({
     return (
         <div
             onClick={() => onClick?.(recipe)}
-            className="flex items-center gap-4 p-4 bg-gray-100 rounded-2xl shadow-md
-                 hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+            className="card-item"
         >
             <div className="rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
                 {recipe.image ? (

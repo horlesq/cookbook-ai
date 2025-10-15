@@ -12,6 +12,10 @@ module.exports = {
             fontFamily: {
                 sans: ["Inter", "system-ui", "sans-serif"],
             },
+            colors: {
+                primary: "#e94e1b",
+                secondary: "#2a84d2",
+            },
         },
     },
     plugins: [],

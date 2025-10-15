@@ -31,7 +31,7 @@ export default function Page() {
     ];
 
     return (
-        <div className="max-w-xl lg:max-w-2xl mx-auto space-y-12 pb-16 md:pb-24 lg:pb-32">
+        <div className="page-container">
             <SearchBar />
 
             <List

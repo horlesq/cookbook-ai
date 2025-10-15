@@ -8,7 +8,7 @@ export default function Page() {
     const GITHUB_REPO_URL = "https://github.com/horlesq/cookbook-ai";
 
     return (
-        <div className="max-w-xl lg:max-w-2xl mx-auto space-y-12 pb-16 md:pb-24 lg:pb-32">
+        <div className="page-container">
             <header className="text-center space-y-4 pt-8">
                 <h1 className="text-4xl font-bold text-gray-900">
                     About CookbookAI

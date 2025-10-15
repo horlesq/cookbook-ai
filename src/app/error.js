@@ -8,10 +8,7 @@ export default function Error({ error, reset }) {
             </h1>
             <p className="text-lg text-gray-600">{error.message}</p>
 
-            <button
-                className="inline-block bg-primary hover:bg-secondary text-white px-6 py-3 rounded-lg font-medium transition-colors"
-                onClick={reset}
-            >
+            <button className="btn-primary" onClick={reset}>
                 Try again
             </button>
         </main>
