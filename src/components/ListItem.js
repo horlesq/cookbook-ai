@@ -15,19 +15,22 @@ export default function ListItem({
     };
 
     return (
-        <div
-            onClick={() => onClick?.(recipe)}
-            className="card-item"
-        >
+        <div onClick={() => onClick?.(recipe)} className="card-item">
             <div className="rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
                 {recipe.image ? (
                     <Image
                         src={recipe.image}
                         alt={recipe.name}
+                        width={64}
+                        height={64}
                         className="w-full h-full object-cover"
                     />
                 ) : (
-                    <DefaultIamge className="text-gray-300" width={40} height={40}/>
+                    <DefaultIamge
+                        className="text-gray-300"
+                        width={40}
+                        height={40}
+                    />
                 )}
             </div>
 

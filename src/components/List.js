@@ -1,4 +1,5 @@
 import ListItem from "./ListItem";
+import ListItemSkeleton from "./ListItemSkeleton";
 
 export default function List({
     title,
@@ -8,6 +9,8 @@ export default function List({
     onRecipeClick,
     emptyMessage = "No recipes found",
     showFavorites = false,
+    loading = false,
+    skeletonCount = 5,
 }) {
     const isFavorite = (recipeId) => favorites.includes(recipeId);
 
@@ -19,7 +22,13 @@ export default function List({
                 </h2>
             )}
 
-            {recipes.length === 0 ? (
+            {loading ? (
+                <div className="space-y-3">
+                    {Array.from({ length: skeletonCount }).map((_, index) => (
+                        <ListItemSkeleton key={index} />
+                    ))}
+                </div>
+            ) : recipes.length === 0 ? (
                 <div className="text-center py-12">
                     <p className="text-gray-500 text-lg">{emptyMessage}</p>
                 </div>

@@ -11,20 +11,17 @@ export default function SearchBar({ onSearch, initialQuery = "" }) {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    const handleSearch = (searchQuery) => {
-        setLoading(true);
-
-        setTimeout(() => {
-            router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
-            setLoading(false);
-        }, 300);
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!query.trim()) return;
+        if (!query.trim() || loading) return;
 
-        handleSearch(query.trim());
+        setLoading(true);
+
+        router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+
+        setTimeout(() => {
+            setLoading(false);
+        }, 500);
     };
 
     return (
