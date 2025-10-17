@@ -1,17 +1,18 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-import SearchBar from "@/components/SerachBar";
+import SearchBar from "@/components/SearchBar";
 import List from "@/components/List";
+import { useRecipes } from "@/contexts/RecipiesContext";
 
-export default function Page() {
+export default function SearchResultsPage() {
     const searchParams = useSearchParams();
     const initialQuery = searchParams.get("q") || "something for dinner";
+    const previousQueryRef = useRef(initialQuery);
 
-    const [recipes, setRecipes] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { recipes, loading, setLoading, updateRecipes } = useRecipes();
 
     useEffect(() => {
         async function fetchRecipes() {
@@ -30,29 +31,34 @@ export default function Page() {
                 }
 
                 const data = await response.json();
-                setRecipes(data.recipes || []);
-                console.log(data)
+                updateRecipes(data.recipes || []);
             } catch (error) {
                 console.error("Error fetching recipes:", error);
-                setRecipes([]);
+                updateRecipes([]);
             } finally {
                 setLoading(false);
             }
         }
 
-        fetchRecipes();
-    }, [initialQuery]);
+        // Fetch recipes when the query changes
+        if (initialQuery !== previousQueryRef.current) {
+            previousQueryRef.current = initialQuery;
+            fetchRecipes();
+        }
+        // Also fetch if we don't have any recipes (initial load)
+        else if (recipes.length === 0) {
+            fetchRecipes();
+        }
+    }, [initialQuery, recipes.length, setLoading, updateRecipes]);
 
     const handleSearch = (query) => {
         console.log("New Search initiated for:", query);
+        // Clear previous recipes immediately for better UX
+        updateRecipes([]);
     };
 
     const handleToggleFavorite = (recipeId) => {
         console.log(`Toggle favorite status for recipe ID: ${recipeId}`);
-    };
-
-    const handleRecipeClick = (recipe) => {
-        console.log("Viewing recipe details for:", recipe.name);
     };
 
     const handleDislike = () => {
@@ -61,14 +67,17 @@ export default function Page() {
 
     return (
         <div className="page-container">
-            <SearchBar onSearch={handleSearch} initialQuery={initialQuery} />
+            <SearchBar
+                onSearch={handleSearch}
+                initialQuery={initialQuery}
+                loading={loading}
+            />
 
             <List
                 title="Suggested recipes"
                 recipes={recipes}
                 loading={loading}
                 onToggleFavorite={handleToggleFavorite}
-                onRecipeClick={handleRecipeClick}
                 emptyMessage="No recipes found. Try a different search."
             />
 

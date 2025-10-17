@@ -65,7 +65,8 @@ export async function POST(request) {
               "id": number, // Unique ID (e.g., 100, 101, 102). Use a random 3-digit number.
               "name": string, // Creative name for the dish
               "time": string, // Estimated preparation and cooking time (e.g., "30 min")
-              "description": string // A brief, one-sentence description of the dish.
+              "ingredients": [string array], // Full list of ingredients with measurements
+              "instructions": [string array] // Step-by-step very very detailed cooking instructions
               "imageSearchQuery": string // A concise search phrase for finding food images (e.g., "chicken pasta", "chocolate cake", "grilled salmon")
             }
           ]

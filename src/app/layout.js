@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 
+import { RecipesProvider } from "@/contexts/RecipiesContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -26,13 +27,17 @@ export default function RootLayout({ children }) {
             <body
                 className={`${inter.className} antialiased min-h-screen flex flex-col`}
             >
-                <Header />
+                <RecipesProvider>
+                    <Header />
 
-                <main className="flex-1 px-4 sm:px-6 lg:px-8 py-8">
-                    <div className="max-w-6xl mx-auto w-full">{children}</div>
-                </main>
+                    <main className="flex-1 px-4 sm:px-6 lg:px-8 py-8">
+                        <div className="max-w-6xl mx-auto w-full">
+                            {children}
+                        </div>
+                    </main>
 
-                <Footer />
+                    <Footer />
+                </RecipesProvider>
             </body>
         </html>
     );

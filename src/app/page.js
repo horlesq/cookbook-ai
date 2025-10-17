@@ -1,5 +1,5 @@
 "use client";
-import SearchBar from "@/components/SerachBar";
+import SearchBar from "@/components/SearchBar";
 import List from "@/components/List";
 
 export default function Page() {
@@ -39,7 +39,6 @@ export default function Page() {
                 recipes={favoriteRecipes}
                 favorites={[1, 2, 3, 4]}
                 onToggleFavorite={() => {}}
-                onRecipeClick={() => {}}
                 showFavorites={true}
             />
         </div>

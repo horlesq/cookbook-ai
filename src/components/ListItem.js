@@ -2,20 +2,26 @@
 
 import { Image as DefaultIamge, Heart } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function ListItem({
     recipe,
     isFavorite = false,
     onToggleFavorite,
-    onClick,
 }) {
+    const router = useRouter();
+
     const handleFavoriteClick = (e) => {
         e.stopPropagation();
         onToggleFavorite?.(recipe.id);
     };
 
+    const handleClick = () => {
+        router.push(`/recipe/${recipe.id}`);
+    };
+
     return (
-        <div onClick={() => onClick?.(recipe)} className="card-item">
+        <div onClick={handleClick} className="card-item">
             <div className="rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden">
                 {recipe.image ? (
                     <Image

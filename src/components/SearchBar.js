@@ -6,22 +6,15 @@ import { useRouter } from "next/navigation";
 
 import SpinnerMini from "./SpinnerMini";
 
-export default function SearchBar({ onSearch, initialQuery = "" }) {
+export default function SearchBar({ loading, initialQuery = "" }) {
     const [query, setQuery] = useState(initialQuery);
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!query.trim() || loading) return;
-
-        setLoading(true);
-
+        
         router.push(`/search?q=${encodeURIComponent(query.trim())}`);
-
-        setTimeout(() => {
-            setLoading(false);
-        }, 500);
     };
 
     return (

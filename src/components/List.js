@@ -6,7 +6,6 @@ export default function List({
     recipes = [],
     favorites = [],
     onToggleFavorite,
-    onRecipeClick,
     emptyMessage = "No recipes found",
     showFavorites = false,
     loading = false,
@@ -40,7 +39,6 @@ export default function List({
                             recipe={recipe}
                             isFavorite={showFavorites || isFavorite(recipe.id)}
                             onToggleFavorite={onToggleFavorite}
-                            onClick={onRecipeClick}
                         />
                     ))}
                 </div>
