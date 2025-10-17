@@ -2,6 +2,10 @@
 
 A full-stack web application that uses AI to generate personalized recipes based on user descriptions. Users can search for meal ideas, view detailed recipes with ingredients and instructions, and save their favorite recipes for later. The project features a responsive design with a modern UI and seamless user experience across all devices.
 
+<img width="1363" height="1075" alt="cookbook-ai-delta vercel app_" src="https://github.com/user-attachments/assets/14657d4a-3a78-43d2-98d2-d20c46a9d8a2" />
+<img width="1363" height="1599" alt="cookbook-ai-delta vercel app_ (1)" src="https://github.com/user-attachments/assets/3f2b7ab1-943e-4403-97d5-c71250b62cfa" />
+
+
 ## Table of Contents
 
 - [Features](#features)
