@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -8,12 +8,32 @@ import SpinnerMini from "./SpinnerMini";
 
 export default function SearchBar({ loading, initialQuery = "" }) {
     const [query, setQuery] = useState(initialQuery);
+    const [placeholder, setPlaceholder] = useState(
+        "What do you feel like eating?"
+    );
     const router = useRouter();
+
+    useEffect(() => {
+        const updatePlaceholder = () => {
+            if (window.innerWidth < 640) {
+                setPlaceholder("Search recipes...");
+            } else if (window.innerWidth < 768) {
+                setPlaceholder("What are you craving?");
+            } else {
+                setPlaceholder("What do you feel like eating?");
+            }
+        };
+
+        updatePlaceholder();
+        window.addEventListener("resize", updatePlaceholder);
+
+        return () => window.removeEventListener("resize", updatePlaceholder);
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!query.trim() || loading) return;
-        
+
         router.push(`/search?q=${encodeURIComponent(query.trim())}`);
     };
 
@@ -27,18 +47,18 @@ export default function SearchBar({ loading, initialQuery = "" }) {
             >
                 <input
                     type="text"
-                    className="flex-grow h-full py-0 px-6 sm:px-8 border-none outline-none 
-                     text-lg text-gray-900 bg-transparent placeholder-gray-400 
+                    className="flex-grow h-full py-0 pl-6 pr-14 sm:pl-8 sm:pr-16 border-none outline-none 
+                     text-base sm:text-lg text-gray-900 bg-transparent placeholder-gray-400 
                      focus:ring-0"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="What do you feel like eating?"
+                    placeholder={placeholder}
                     disabled={loading}
                 />
 
                 <button
                     type="submit"
-                    className={`flex items-center justify-center w-14 h-full 
+                    className={`absolute right-0 flex items-center justify-center w-14 h-full 
                       transition duration-200 ease-in-out 
                       ${
                           loading || !query.trim()

@@ -10,8 +10,8 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="bg-gray-50 border-t border-gray-200 mt-auto">
-            <div className="max-w-6xl mx-auto py-8 px-4 sm:px-0">
+        <footer className="bg-gray-50 border-t border-gray-200 mt-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto py-8 ">
                 <div className="flex flex-col lg:flex-row justify-between items-start gap-8">
                     <div className="flex-1">
                         <div className="flex items-center gap-2 mb-4">
@@ -21,9 +21,9 @@ export default function Footer() {
                         </div>
                         <p className="text-gray-600 text-sm leading-relaxed max-w-md">
                             Your personal recipe generator. Use Artificial
-                            Intelligence to instantly create unique
-                            recipes and culinary
-                            suggestions from the ingredients you have at home.
+                            Intelligence to instantly create unique recipes and
+                            culinary suggestions from the ingredients you have
+                            at home.
                         </p>
                     </div>
 
@@ -49,8 +49,8 @@ export default function Footer() {
                 <div className="border-t border-gray-200 pt-6 mt-6">
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <p className="text-gray-500 text-sm">
-                            © {new Date().getFullYear()} CookbookAI. All
-                            rights reserved.
+                            © {new Date().getFullYear()} CookbookAI. All rights
+                            reserved.
                         </p>
                         <div className="flex items-center gap-2 text-gray-500 text-sm">
                             <span>Created by</span>

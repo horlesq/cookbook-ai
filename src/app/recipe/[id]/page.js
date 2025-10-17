@@ -118,7 +118,7 @@ export default function Page() {
     return (
         <div className="page-container max-w-6xl pt-8">
             <div className="grid grid-cols-12 gap-8">
-                <div className="col-span-12 md:col-span-5 flex flex-col sticky top-8 h-fit">
+                <div className="col-span-12 md:col-span-5 flex flex-col md:sticky top-8 h-fit">
                     <div className="relative rounded-xl overflow-hidden mb-6 h-80 bg-gray-100 group flex-shrink-0 flex items-center justify-center">
                         {recipe.image ? (
                             <Image
