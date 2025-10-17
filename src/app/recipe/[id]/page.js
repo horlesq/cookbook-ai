@@ -11,19 +11,46 @@ import toast from "react-hot-toast";
 export default function Page() {
     const params = useParams();
     const router = useRouter();
-    const { getRecipeById, favorites, toggleFavorite } = useRecipes();
+    const { getRecipeById, favorites } = useRecipes();
     const { data: session } = useSession();
 
     const [recipe, setRecipe] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const recipeData = getRecipeById(params.id);
-        if (recipeData) {
-            setRecipe(recipeData);
-        } else {
+        const loadRecipe = () => {
+            setLoading(true);
+
+            // First try to get from session storage
+            const recipeFromStorage = getRecipeById(params.id);
+
+            if (recipeFromStorage) {
+                setRecipe(recipeFromStorage);
+                setLoading(false);
+                return;
+            }
+
+            // If not found in storage, check favorites
+            const recipeFromFavorites = favorites.find(
+                (fav) => fav.recipeId === Number(params.id)
+            );
+
+            if (recipeFromFavorites) {
+                setRecipe({
+                    ...recipeFromFavorites.recipeData,
+                    id: recipeFromFavorites.recipeId,
+                });
+                setLoading(false);
+                return;
+            }
+
+            // If still not found, redirect to search
+            setLoading(false);
             router.push("/search");
-        }
-    }, [params.id, getRecipeById, router]);
+        };
+
+        loadRecipe();
+    }, [params.id, getRecipeById, favorites, router]);
 
     // Check if this recipe is in favorites
     const isRecipeFavorite = favorites.some(
@@ -55,7 +82,7 @@ export default function Page() {
         }
     };
 
-    if (!recipe) {
+    if (loading) {
         return (
             <div className="page-container max-w-6xl">
                 <div className="animate-pulse space-y-6">
@@ -67,6 +94,22 @@ export default function Page() {
                         <div className="h-4 bg-gray-200 rounded" />
                         <div className="h-4 bg-gray-200 rounded w-5/6" />
                     </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!recipe) {
+        return (
+            <div className="page-container max-w-6xl">
+                <div className="text-center py-12">
+                    <p className="text-gray-500 text-lg">Recipe not found</p>
+                    <button
+                        onClick={() => router.push("/search")}
+                        className="mt-4 px-4 py-2 bg-primary text-white rounded-lg"
+                    >
+                        Back to Search
+                    </button>
                 </div>
             </div>
         );
