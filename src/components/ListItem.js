@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRecipes } from "@/contexts/RecipiesContext";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 export default function ListItem({
     recipe,
@@ -21,20 +22,28 @@ export default function ListItem({
     );
 
     const handleFavoriteClick = async (e) => {
-        console.log("Recipe object:", recipe); // This shows the full recipe is available
         e.stopPropagation();
 
         if (!session) {
-            console.log("Please sign in to add favorites");
+            toast.error("Please sign in to add favorites");
             return;
         }
 
-        if (onToggleFavorite) {
-            // Pass the full recipe object, not just the ID
-            onToggleFavorite(recipe);
-        } else {
-            // Use the context toggleFavorite
-            await toggleFavorite(recipe);
+        try {
+            if (onToggleFavorite) {
+                await onToggleFavorite(recipe);
+            } else {
+                await toggleFavorite(recipe);
+            }
+
+            if (isRecipeFavorite) {
+                toast.success("Removed from favorites");
+            } else {
+                toast.success("Added to favorites!");
+            }
+        } catch (error) {
+            console.error("Error toggling favorite:", error);
+            toast.error("Failed to update favorites");
         }
     };
 

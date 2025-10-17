@@ -6,6 +6,7 @@ import { ArrowLeft, Heart, Clock, Image as DefaultImage } from "lucide-react";
 import { useRecipes } from "@/contexts/RecipiesContext";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function Page() {
     const params = useParams();
@@ -35,8 +36,7 @@ export default function Page() {
 
     const handleToggleFavorite = async () => {
         if (!session) {
-            console.log("Please sign in to add favorites");
-            // Optionally redirect to signin or show a toast
+            toast.error("Please sign in to add favorites");
             return;
         }
 
@@ -44,9 +44,14 @@ export default function Page() {
 
         try {
             await toggleFavorite(recipe);
-            console.log("Toggled favorite for recipe:", recipe.id);
+            if (isRecipeFavorite) {
+                toast.success("Removed from favorites");
+            } else {
+                toast.success("Added to favorites!");
+            }
         } catch (error) {
             console.error("Error toggling favorite:", error);
+            toast.error("Failed to update favorites");
         }
     };
 

@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function AuthSection() {
     const { data: session } = useSession();
@@ -13,9 +14,9 @@ export default function AuthSection() {
     const handleSignOut = async () => {
         await signOut({ redirect: false });
         setShowConfirmation(false);
+        toast.success("Signed out successfully");
         router.refresh();
     };
-
 
     if (session) {
         return (

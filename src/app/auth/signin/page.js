@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function SignIn() {
     const [email, setEmail] = useState("");
@@ -19,14 +20,13 @@ export default function SignIn() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
-        setError("");
 
         if (!isValidEmail(email)) {
-            setError("Please enter a valid email address");
-            setIsLoading(false);
+            toast.error("Please enter a valid email address");
             return;
         }
+
+        setIsLoading(true);
 
         try {
             const result = await signIn("credentials", {
@@ -35,15 +35,20 @@ export default function SignIn() {
                 redirect: false,
             });
 
-            if (result?.ok) {
+            if (result?.ok && !result?.error) {
+                toast.success("Welcome back! Signed in successfully");
                 router.push("/");
                 router.refresh();
             } else {
-                setError(result?.error || "Invalid email or password");
+                if (result?.error === "CredentialsSignin") {
+                    toast.error("Invalid email or password");
+                } else {
+                    toast.error("Sign in failed");
+                }
             }
         } catch (error) {
             console.error("Sign in error:", error);
-            setError("An error occurred. Please try again.");
+            toast.error("An error occurred. Please try again.");
         } finally {
             setIsLoading(false);
         }

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 
 import { RecipesProvider } from "@/contexts/RecipiesContext";
 import SessionProvider from "@/contexts/SessionProvider";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -19,7 +20,7 @@ export const metadata = {
         default: "CookbookAI",
     },
     description:
-        "Your personal recipe generator. Use Artificial Intelligence to instantly create unique recipes, customized meal plans, and culinary suggestions from the ingredients you have at home.",
+        "Your personal recipe generator. Use Artificial Intelligence to instantly create unique recipes and culinary suggestions from the ingredients you have at home.",
 };
 
 export default async function RootLayout({ children }) {
@@ -40,6 +41,30 @@ export default async function RootLayout({ children }) {
                         </main>
 
                         <Footer />
+                        <Toaster
+                            position="top-center"
+                            toastOptions={{
+                                duration: 4000,
+                                style: {
+                                    background: "#363636",
+                                    color: "#fff",
+                                },
+                                success: {
+                                    duration: 1000,
+                                    iconTheme: {
+                                        primary: "#10b981",
+                                        secondary: "#fff",
+                                    },
+                                },
+                                error: {
+                                    duration: 2000,
+                                    iconTheme: {
+                                        primary: "#ef4444",
+                                        secondary: "#fff",
+                                    },
+                                },
+                            }}
+                        />
                     </RecipesProvider>
                 </SessionProvider>
             </body>

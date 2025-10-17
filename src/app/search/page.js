@@ -2,10 +2,12 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { useRecipes } from "@/contexts/RecipiesContext";
+
+import toast from "react-hot-toast";
 
 import SearchBar from "@/components/SearchBar";
 import List from "@/components/List";
-import { useRecipes } from "@/contexts/RecipiesContext";
 
 export default function SearchResultsPage() {
     const searchParams = useSearchParams();
@@ -21,7 +23,7 @@ export default function SearchResultsPage() {
         addDislikedRecipeIds,
         toggleFavorite,
     } = useRecipes();
-    
+
     const fetchRecipes = async (excludeIds = []) => {
         setLoading(true);
         try {
@@ -42,8 +44,13 @@ export default function SearchResultsPage() {
 
             const data = await response.json();
             updateRecipes(data.recipes || []);
+
+            if (data.recipes.length === 0) {
+                toast.error("No recipes found. Try a different search.");
+            }
         } catch (error) {
             console.error("Error fetching recipes:", error);
+            toast.error("Failed to load recipes");
             updateRecipes([]);
         } finally {
             setLoading(false);

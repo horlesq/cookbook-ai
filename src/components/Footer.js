@@ -22,7 +22,7 @@ export default function Footer() {
                         <p className="text-gray-600 text-sm leading-relaxed max-w-md">
                             Your personal recipe generator. Use Artificial
                             Intelligence to instantly create unique
-                            recipes, customized meal plans, and culinary
+                            recipes and culinary
                             suggestions from the ingredients you have at home.
                         </p>
                     </div>

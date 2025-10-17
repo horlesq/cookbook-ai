@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -23,17 +24,17 @@ export default function Register() {
         setError("");
 
         if (!isValidEmail(email)) {
-            setError("Please enter a valid email address");
+            toast.error("Please enter a valid email address");
             return;
         }
 
         if (password.length < 6) {
-            setError("Password must be at least 6 characters");
+            toast.error("Password must be at least 6 characters");
             return;
         }
 
         if (password !== confirmPassword) {
-            setError("Passwords do not match");
+            toast.error("Passwords do not match");
             return;
         }
 
@@ -54,9 +55,11 @@ export default function Register() {
             const registerData = await registerResponse.json();
 
             if (!registerResponse.ok) {
-                setError(registerData.error || "Registration failed");
+                toast.error(registerData.error || "Registration failed");
                 return;
             }
+
+            toast.success("Account created successfully!");
 
             const signInResult = await signIn("credentials", {
                 email,
@@ -72,7 +75,7 @@ export default function Register() {
             }
         } catch (error) {
             console.error("Registration error:", error);
-            setError("An error occurred. Please try again.");
+            toast.error("An error occurred. Please try again.");
         } finally {
             setIsLoading(false);
         }
