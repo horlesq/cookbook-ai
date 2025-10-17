@@ -16,7 +16,7 @@ export default function Footer() {
                     <div className="flex-1">
                         <div className="flex items-center gap-2 mb-4">
                             <span className="text-xl font-bold text-gray-900">
-                                CoockbookAI
+                                CookbookAI
                             </span>
                         </div>
                         <p className="text-gray-600 text-sm leading-relaxed max-w-md">
@@ -49,7 +49,7 @@ export default function Footer() {
                 <div className="border-t border-gray-200 pt-6 mt-6">
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <p className="text-gray-500 text-sm">
-                            © {new Date().getFullYear()} CoockbookAI. All
+                            © {new Date().getFullYear()} CookbookAI. All
                             rights reserved.
                         </p>
                         <div className="flex items-center gap-2 text-gray-500 text-sm">

@@ -9,9 +9,9 @@ export default function Logo() {
                 height={60}
                 width={60}
                 quality={100}
-                alt="CoockbookAI Logo"
+                alt="CookbookAI Logo"
             />
-            <span className="text-2xl font-bold text-gray-900">CoockbookAI</span>
+            <span className="text-2xl font-bold text-gray-900">CookbookAI</span>
         </Link>
     );
 }

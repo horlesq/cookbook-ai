@@ -1,4 +1,4 @@
-# CoockbookAI
+# CookbookAI
 
 A full-stack web application that uses AI to generate personalized recipes based on user descriptions. Users can search for meal ideas, view detailed recipes with ingredients and instructions, and save their favorite recipes for later. The project features a responsive design with a modern UI and seamless user experience across all devices.
 
