@@ -4,10 +4,11 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LogOut, LogIn } from "lucide-react";
 import toast from "react-hot-toast";
 
-export default function AuthSection() {
-    const { data: session } = useSession();
+export default function AuthSection({ isMobile = false, onMobileClose }) {
+    const { data: session, status } = useSession();
     const router = useRouter();
     const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -15,17 +16,39 @@ export default function AuthSection() {
         await signOut({ redirect: false });
         setShowConfirmation(false);
         toast.success("Signed out successfully");
+        if (isMobile && onMobileClose) {
+            onMobileClose();
+        }
         router.refresh();
     };
+
+    const handleSignInClick = () => {
+        if (isMobile && onMobileClose) {
+            onMobileClose();
+        }
+    };
+
+    if (status === "loading") {
+        return (
+            <div
+                className={`bg-gray-200 rounded-full animate-pulse ${
+                    isMobile ? "w-32 h-11" : "w-24 h-9"
+                }`}
+            />
+        );
+    }
 
     if (session) {
         return (
             <>
                 <button
                     onClick={() => setShowConfirmation(true)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors text-sm font-medium"
+                    className={`flex items-center gap-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors font-medium ${
+                        isMobile ? "px-8 py-3 text-base" : "px-4 py-2 text-sm"
+                    }`}
                 >
-                    <span className="hidden sm:inline">Sign Out</span>
+                    <LogOut size={isMobile ? 20 : 16} />
+                    Sign Out
                 </button>
 
                 {/* Confirmation Modal */}
@@ -69,9 +92,13 @@ export default function AuthSection() {
     return (
         <a
             href="/auth/signin"
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white hover:bg-secondary transition-colors text-sm font-medium"
+            onClick={handleSignInClick}
+            className={`flex items-center gap-2 rounded-full bg-primary text-white hover:bg-secondary transition-colors font-medium ${
+                isMobile ? "px-8 py-3 text-base" : "px-4 py-2 text-sm"
+            }`}
         >
-            <span className="hidden sm:inline">Sign In</span>
+            <LogIn size={isMobile ? 20 : 16} />
+            Sign In
         </a>
     );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import AuthSection from "./AuthSection";
 
 export default function Navigation() {
     const pathname = usePathname();
@@ -17,7 +18,7 @@ export default function Navigation() {
     return (
         <>
             {/* Desktop Navigation */}
-            <nav className="hidden md:block z-10">
+            <nav className="hidden md:flex items-center gap-6 lg:gap-8 z-10">
                 <ul className="flex gap-6 lg:gap-8 items-center">
                     {navItems.map((item) => (
                         <li key={item.href}>
@@ -34,9 +35,10 @@ export default function Navigation() {
                         </li>
                     ))}
                 </ul>
+                <AuthSection />
             </nav>
 
-            {/* Mobile Navigation */}
+            {/* Mobile Navigation Toggle */}
             <button
                 className="md:hidden z-50 flex flex-col gap-1 p-2 relative"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -59,18 +61,20 @@ export default function Navigation() {
                 ></span>
             </button>
 
+            {/* Mobile Navigation Menu */}
             <nav
                 className={`md:hidden fixed top-0 left-0 w-full h-screen bg-white/95 backdrop-blur-md z-40 transition-transform duration-300 ${
                     isMenuOpen ? "translate-x-0" : "translate-x-full"
                 }`}
             >
-                <div className="flex flex-col justify-center items-center h-full">
+                <div className="flex flex-col justify-center items-center h-full gap-12">
+                    {/* Navigation Links */}
                     <ul className="flex flex-col gap-8 items-center text-xl">
                         {navItems.map((item) => (
                             <li key={item.href}>
                                 <Link
                                     href={item.href}
-                                    className={`font-medium transition-colors hover:primary ${
+                                    className={`font-medium transition-colors hover:text-primary ${
                                         pathname === item.href
                                             ? "text-primary"
                                             : "text-gray-700"
@@ -82,6 +86,14 @@ export default function Navigation() {
                             </li>
                         ))}
                     </ul>
+
+                    {/* Auth Button */}
+                    <div className="pt-4">
+                        <AuthSection
+                            isMobile={true}
+                            onMobileClose={() => setIsMenuOpen(false)}
+                        />
+                    </div>
                 </div>
             </nav>
         </>
