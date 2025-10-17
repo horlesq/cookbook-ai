@@ -1,9 +1,10 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 
-import { RecipesProvider } from "@/contexts/RecipiesContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+
+import { RecipesProvider } from "@/contexts/RecipiesContext";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -13,14 +14,14 @@ const inter = Inter({
 
 export const metadata = {
     title: {
-        template: "%s | Cookbook AI",
-        default: "Cookbook AI",
+        template: "%s | CookbookAI",
+        default: "CookbookAI",
     },
     description:
-        "Your personal recipe generator. Use Artificial Intelligence (AI) to instantly create unique recipes, customized meal plans, and culinary suggestions from the ingredients you have at home.",
+        "Your personal recipe generator. Use Artificial Intelligence to instantly create unique recipes, customized meal plans, and culinary suggestions from the ingredients you have at home.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
     return (
         <html lang="en">
             <head></head>
