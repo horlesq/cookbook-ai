@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connectDB from "./mongodb";
 import User from "@/models/User";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: MongoDBAdapter(connectDB),
@@ -12,33 +12,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             name: "credentials",
             credentials: {
                 email: { label: "Email", type: "email" },
-                name: { label: "Name", type: "text" },
+                password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                if (!credentials?.email) {
-                    return null;
+                if (!credentials?.email || !credentials?.password) {
+                    throw new Error("Email and password are required");
                 }
 
                 await connectDB();
 
-                // Find or create user
-                let user = await User.findOne({
+                const user = await User.findOne({
                     email: credentials.email.toLowerCase(),
                 });
 
-                if (!user) {
-                    user = await User.create({
-                        email: credentials.email.toLowerCase(),
-                        name:
-                            credentials.name || credentials.email.split("@")[0],
-                    });
-                }
+                if (user) {
+                    const isPasswordValid = await user.comparePassword(
+                        credentials.password
+                    );
+                    if (!isPasswordValid) {
+                        throw new Error("Invalid email or password");
+                    }
 
-                return {
-                    id: user._id.toString(),
-                    email: user.email,
-                    name: user.name,
-                };
+                    return {
+                        id: user._id.toString(),
+                        email: user.email,
+                    };
+                } else {
+                    throw new Error("No account found with this email");
+                }
             },
         }),
     ],
