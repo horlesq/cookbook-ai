@@ -1,25 +1,79 @@
 # CoockbookAI
 
+A full-stack web application that uses AI to generate personalized recipes based on user descriptions. Users can search for meal ideas, view detailed recipes with ingredients and instructions, and save their favorite recipes for later. The project features a responsive design with a modern UI and seamless user experience across all devices.
 
 ## Table of Contents
 
-
+- [Features](#features)
+- [Usage](#usage)
+- [Technologies](#technologies)
+- [Installation](#installation)
+- [License](#license)
+- [Contact](#contact)
 
 ## Features
 
-
+- **AI Recipe Generation**: Generate food recipes using AI based on your ingredients
+- **Favorite Recipes**: Save and manage your favorite recipes
+- **User Authentication**: Secure sign-in and registration
+- **Search Functionality**: Find recipes based on what you have
+- **Responsive Design**: Works perfectly on all devices
 
 ## Usage
 
-
+- **Search for Recipes**: Use the search bar to describe what you want to eat
+- **Browse Suggestions**: View AI-generated recipe suggestions
+- **Save Favorites**: Create an account to save your favorite recipes
+- **View Details**: Click on any recipe to see ingredients and instructions
 
 ## Technologies
 
-
+- **Next.js** - React framework with App Router
+- **Tailwind CSS** - Styling
+- **NextAuth.js** - Authentication
+- **MongoDB** - Database with Mongoose ODM
+- **OpenAI API** - AI recipe generation
 
 ## Installation
 
+To get started with this project, follow these steps:
 
+1. **Clone the repository**:
+
+```bash
+git clone https://github.com/horlesqcookbook-ai.git
+```
+
+2. **Navigate to the project directory**:
+
+```bash
+cd cookbook-ai
+```
+
+3. **Install dependencies**:
+
+```bash
+npm install
+```
+
+4. **Set up environment variables**:
+   
+```bash
+# Create .env.local file with:
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key
+OPENAI_API_KEY=your-openai-api-key
+PEXELS_API_KEY=your-pexels-api-key
+MONGODB_URI=your-mongodb-connection-string
+```
+   
+5. **Start the development server**:
+
+```bash
+npm run dev
+```
+
+6. **Open your browser and navigate to http://localhost:3000 to access the application**.
 
 ## License
 
