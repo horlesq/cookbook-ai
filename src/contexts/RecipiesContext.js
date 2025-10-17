@@ -7,10 +7,13 @@ const RecipesContext = createContext();
 export function RecipesProvider({ children }) {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [dislikedRecipeIds, setDislikedRecipeIds] = useState([]);
 
-    // Load recipes from sessionStorage on mount
+    // Load recipes and disliked IDs from sessionStorage on mount
     useEffect(() => {
         const savedRecipes = sessionStorage.getItem("recipes");
+        const savedDislikedIds = sessionStorage.getItem("dislikedRecipeIds");
+
         if (savedRecipes) {
             try {
                 setRecipes(JSON.parse(savedRecipes));
@@ -18,14 +21,34 @@ export function RecipesProvider({ children }) {
                 console.error("Error loading recipes from storage:", error);
             }
         }
+
+        if (savedDislikedIds) {
+            try {
+                setDislikedRecipeIds(JSON.parse(savedDislikedIds));
+            } catch (error) {
+                console.error(
+                    "Error loading disliked IDs from storage:",
+                    error
+                );
+            }
+        }
     }, []);
 
-    // Save recipes to sessionStorage whenever they change
+    // Save recipes and disliked IDs to sessionStorage whenever they change
     useEffect(() => {
         if (recipes.length > 0) {
             sessionStorage.setItem("recipes", JSON.stringify(recipes));
         }
     }, [recipes]);
+
+    useEffect(() => {
+        if (dislikedRecipeIds.length > 0) {
+            sessionStorage.setItem(
+                "dislikedRecipeIds",
+                JSON.stringify(dislikedRecipeIds)
+            );
+        }
+    }, [dislikedRecipeIds]);
 
     const updateRecipes = (newRecipes) => {
         setRecipes(newRecipes);
@@ -40,6 +63,18 @@ export function RecipesProvider({ children }) {
         return recipes.find((recipe) => recipe.id === Number(id));
     };
 
+    const addDislikedRecipeIds = (ids) => {
+        setDislikedRecipeIds((prev) => {
+            const newIds = [...new Set([...prev, ...ids])];
+            return newIds;
+        });
+    };
+
+    const clearDislikedRecipeIds = () => {
+        setDislikedRecipeIds([]);
+        sessionStorage.removeItem("dislikedRecipeIds");
+    };
+
     return (
         <RecipesContext.Provider
             value={{
@@ -49,6 +84,9 @@ export function RecipesProvider({ children }) {
                 updateRecipes,
                 clearRecipes,
                 getRecipeById,
+                dislikedRecipeIds,
+                addDislikedRecipeIds,
+                clearDislikedRecipeIds,
             }}
         >
             {children}

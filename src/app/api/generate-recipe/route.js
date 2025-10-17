@@ -44,7 +44,7 @@ async function fetchPexelsImage(searchQuery) {
 }
 
 export async function POST(request) {
-    const { query } = await request.json();
+    const { query, excludeIds = [] } = await request.json();
 
     if (!query) {
         return NextResponse.json(
@@ -55,14 +55,24 @@ export async function POST(request) {
 
     // Prompt
     const systemInstruction = `
-        You are a culinary AI assistant. Your task is to generate 5 recipe suggestions 
+        You are a culinary AI assistant. Your task is to generate 5 DIFFERENT recipe suggestions 
         based ONLY on the user's input (ingredients/description). 
+        
+        ${
+            excludeIds.length > 0
+                ? `IMPORTANT: The user has previously disliked these recipe IDs: [${excludeIds.join(
+                      ", "
+                  )}]. 
+           Please generate COMPLETELY DIFFERENT recipes that don't resemble the disliked ones. 
+           Focus on alternative cooking methods, different ingredient combinations, or varied cuisine styles.`
+                : ""
+        }
         
         The output MUST be a JSON object containing a 'recipes' array, strictly following this structure:
         {
           "recipes": [
             {
-              "id": number, // Unique ID (e.g., 100, 101, 102). Use a random 3-digit number.
+              "id": number, // Unique ID (e.g., 100, 101, 102). Use a random 3-digit number that hasn't been used before.
               "name": string, // Creative name for the dish
               "time": string, // Estimated preparation and cooking time (e.g., "30 min")
               "ingredients": [string array], // Full list of ingredients with measurements
@@ -82,7 +92,9 @@ export async function POST(request) {
                 { role: "system", content: systemInstruction },
                 {
                     role: "user",
-                    content: `Generate recipes based on this: ${query}`,
+                    content: `Generate ${
+                        excludeIds.length > 0 ? "different " : ""
+                    }recipes based on: ${query}`,
                 },
             ],
 

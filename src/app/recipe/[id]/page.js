@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Heart, Clock } from "lucide-react";
+import { ArrowLeft, Heart, Clock, Image as DefaultImage } from "lucide-react";
 import { useRecipes } from "@/contexts/RecipiesContext";
 import Image from "next/image";
 
@@ -53,8 +53,8 @@ export default function Page() {
         <div className="page-container max-w-6xl pt-8">
             <div className="grid grid-cols-12 gap-8">
                 <div className="col-span-12 md:col-span-5 flex flex-col sticky top-8 h-fit">
-                    {recipe.image && (
-                        <div className="relative rounded-xl overflow-hidden mb-6 h-80 bg-gray-100 group flex-shrink-0">
+                    <div className="relative rounded-xl overflow-hidden mb-6 h-80 bg-gray-100 group flex-shrink-0 flex items-center justify-center">
+                        {recipe.image ? (
                             <Image
                                 src={recipe.image}
                                 alt={recipe.name}
@@ -62,17 +62,24 @@ export default function Page() {
                                 height={400}
                                 className="w-full h-full object-cover"
                             />
-                            <button
-                                onClick={handleBack}
-                                className="absolute top-4 left-4 p-2 bg-white rounded-full hover:bg-primary transition-colors shadow-md"
-                            >
-                                <ArrowLeft
-                                    size={20}
-                                    className="text-gray-700 hover:text-white"
-                                />
-                            </button>
-                        </div>
-                    )}
+                        ) : (
+                            <div className="flex flex-col items-center justify-center text-gray-300">
+                                <DefaultImage size={64} />
+                                <span className="text-sm mt-2 text-gray-400">
+                                    No image available
+                                </span>
+                            </div>
+                        )}
+                        <button
+                            onClick={handleBack}
+                            className="absolute top-4 left-4 p-2 bg-white rounded-full hover:bg-primary transition-colors shadow-md"
+                        >
+                            <ArrowLeft
+                                size={20}
+                                className="text-gray-700 hover:text-white"
+                            />
+                        </button>
+                    </div>
 
                     <div className="mb-8 flex-shrink-0">
                         <div className="flex items-start justify-between gap-4 mb-3">
@@ -155,7 +162,7 @@ export default function Page() {
                                 )}
                             </ol>
                         </div>
-                    )} 
+                    )}
                 </div>
             </div>
         </div>

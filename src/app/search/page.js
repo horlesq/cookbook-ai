@@ -12,44 +12,55 @@ export default function SearchResultsPage() {
     const initialQuery = searchParams.get("q") || "something for dinner";
     const previousQueryRef = useRef(initialQuery);
 
-    const { recipes, loading, setLoading, updateRecipes } = useRecipes();
+    const {
+        recipes,
+        loading,
+        setLoading,
+        updateRecipes,
+        dislikedRecipeIds,
+        addDislikedRecipeIds,
+    } = useRecipes();
+
+    const fetchRecipes = async (excludeIds = []) => {
+        setLoading(true);
+        try {
+            const response = await fetch("/api/generate-recipe", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    query: initialQuery,
+                    excludeIds: excludeIds,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch recipes.");
+            }
+
+            const data = await response.json();
+            updateRecipes(data.recipes || []);
+        } catch (error) {
+            console.error("Error fetching recipes:", error);
+            updateRecipes([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        async function fetchRecipes() {
-            setLoading(true);
-            try {
-                const response = await fetch("/api/generate-recipe", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ query: initialQuery }),
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch recipes.");
-                }
-
-                const data = await response.json();
-                updateRecipes(data.recipes || []);
-            } catch (error) {
-                console.error("Error fetching recipes:", error);
-                updateRecipes([]);
-            } finally {
-                setLoading(false);
-            }
-        }
-
         // Fetch recipes when the query changes
         if (initialQuery !== previousQueryRef.current) {
             previousQueryRef.current = initialQuery;
+            // Clear disliked IDs when query changes
             fetchRecipes();
         }
         // Also fetch if we don't have any recipes (initial load)
         else if (recipes.length === 0) {
             fetchRecipes();
         }
-    }, [initialQuery, recipes.length, setLoading, updateRecipes]);
+    }, [initialQuery, recipes.length]);
 
     const handleSearch = (query) => {
         console.log("New Search initiated for:", query);
@@ -61,8 +72,16 @@ export default function SearchResultsPage() {
         console.log(`Toggle favorite status for recipe ID: ${recipeId}`);
     };
 
-    const handleDislike = () => {
-        alert("We will show you new suggestions!");
+    const handleDislike = async () => {
+        // Get current recipe IDs to exclude
+        const currentRecipeIds = recipes.map((recipe) => recipe.id);
+
+        // Add current recipes to disliked list
+        addDislikedRecipeIds(currentRecipeIds);
+
+        // Fetch new recipes excluding the disliked ones
+        const allDislikedIds = [...dislikedRecipeIds, ...currentRecipeIds];
+        await fetchRecipes(allDislikedIds);
     };
 
     return (
