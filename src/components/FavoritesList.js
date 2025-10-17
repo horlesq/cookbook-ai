@@ -2,36 +2,17 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import List from "@/components/List";
+import { useRecipes } from "@/contexts/RecipiesContext";
 
 export default function FavoritesList() {
     const { data: session } = useSession();
+    const { favorites, toggleFavorite } = useRecipes();
 
-    const favoriteRecipes = [
-        {
-            id: 1,
-            name: "Mashed potatoes",
-            time: "20 min",
-            image: null,
-        },
-        {
-            id: 2,
-            name: "Mashed potatoes",
-            time: "20 min",
-            image: null,
-        },
-        {
-            id: 3,
-            name: "Mashed potatoes",
-            time: "20 min",
-            image: null,
-        },
-        {
-            id: 4,
-            name: "Mashed potatoes",
-            time: "20 min",
-            image: null,
-        },
-    ];
+    // Convert favorites to recipe format for the List component
+    const favoriteRecipes = favorites.map((fav) => ({
+        ...fav.recipeData,
+        id: fav.recipeId,
+    }));
 
     if (!session) {
         return (
@@ -43,6 +24,12 @@ export default function FavoritesList() {
                     Sign in to your account to save and organize your favorite
                     recipes in one place.
                 </p>
+                <Link
+                    href="/auth/signin"
+                    className="inline-block px-6 py-3 bg-primary text-white rounded-full hover:bg-secondary transition-colors"
+                >
+                    Sign In
+                </Link>
             </div>
         );
     }
@@ -51,9 +38,10 @@ export default function FavoritesList() {
         <List
             title="Favorites"
             recipes={favoriteRecipes}
-            favorites={[1, 2, 3, 4]}
-            onToggleFavorite={() => {}}
+            favorites={favorites.map((fav) => fav.recipeId)}
+            onToggleFavorite={toggleFavorite}
             showFavorites={true}
+            emptyMessage="You haven't added any favorites yet."
         />
     );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 const RecipesContext = createContext();
 
@@ -8,6 +9,8 @@ export function RecipesProvider({ children }) {
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [dislikedRecipeIds, setDislikedRecipeIds] = useState([]);
+    const [favorites, setFavorites] = useState([]);
+    const { data: session } = useSession();
 
     // Load recipes and disliked IDs from sessionStorage on mount
     useEffect(() => {
@@ -34,6 +37,15 @@ export function RecipesProvider({ children }) {
         }
     }, []);
 
+    // Load user favorites when session changes
+    useEffect(() => {
+        if (session) {
+            fetchFavorites();
+        } else {
+            setFavorites([]);
+        }
+    }, [session]);
+
     // Save recipes and disliked IDs to sessionStorage whenever they change
     useEffect(() => {
         if (recipes.length > 0) {
@@ -49,6 +61,64 @@ export function RecipesProvider({ children }) {
             );
         }
     }, [dislikedRecipeIds]);
+
+    const fetchFavorites = async () => {
+        try {
+            const response = await fetch("/api/favorites");
+            if (response.ok) {
+                const data = await response.json();
+                setFavorites(data.favorites || []);
+            }
+        } catch (error) {
+            console.error("Error fetching favorites:", error);
+        }
+    };
+
+    const toggleFavorite = async (recipe) => {
+        if (!session) {
+            // Redirect to sign in or show message
+            console.log("Please sign in to add favorites");
+            return;
+        }
+
+        const isCurrentlyFavorite = favorites.some(
+            (fav) => fav.recipeId === recipe.id
+        );
+
+        try {
+            if (isCurrentlyFavorite) {
+                // Remove from favorites
+                const response = await fetch(`/api/favorites/${recipe.id}`, {
+                    method: "DELETE",
+                });
+
+                if (response.ok) {
+                    setFavorites((prev) =>
+                        prev.filter((fav) => fav.recipeId !== recipe.id)
+                    );
+                }
+            } else {
+                // Add to favorites
+                const response = await fetch("/api/favorites", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        recipeId: recipe.id,
+                        recipeData: recipe,
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setFavorites((prev) => [...prev, data.favorite]);
+                }
+            }
+        } catch (error) {
+            console.error("Error toggling favorite:", error);
+        }
+    };
 
     const updateRecipes = (newRecipes) => {
         setRecipes(newRecipes);
@@ -87,6 +157,9 @@ export function RecipesProvider({ children }) {
                 dislikedRecipeIds,
                 addDislikedRecipeIds,
                 clearDislikedRecipeIds,
+                favorites,
+                toggleFavorite,
+                fetchFavorites,
             }}
         >
             {children}

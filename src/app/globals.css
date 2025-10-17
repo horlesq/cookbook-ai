@@ -40,7 +40,7 @@ body::-webkit-scrollbar {
         aspect-ratio: 1;
         border-radius: 50%;
         border: 8px solid theme("colors.primary");
-        border-right-color: theme("colors.secondary");
+        border-right-color: transparent;
         animation: rotate 1s infinite linear;
     }
 

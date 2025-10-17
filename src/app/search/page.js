@@ -19,8 +19,9 @@ export default function SearchResultsPage() {
         updateRecipes,
         dislikedRecipeIds,
         addDislikedRecipeIds,
+        toggleFavorite,
     } = useRecipes();
-
+    
     const fetchRecipes = async (excludeIds = []) => {
         setLoading(true);
         try {
@@ -54,22 +55,20 @@ export default function SearchResultsPage() {
         if (initialQuery !== previousQueryRef.current) {
             previousQueryRef.current = initialQuery;
             // Clear disliked IDs when query changes
+            addDislikedRecipeIds([]);
             fetchRecipes();
         }
-        // Also fetch if we don't have any recipes (initial load)
-        else if (recipes.length === 0) {
+        // Also fetch if we don't have any recipes
+        else if (recipes.length === 0 && !loading) {
             fetchRecipes();
         }
-    }, [initialQuery, recipes.length]);
+    }, [initialQuery, recipes.length, loading]);
 
     const handleSearch = (query) => {
-        console.log("New Search initiated for:", query);
-        // Clear previous recipes immediately for better UX
+        // Clear previous recipes
         updateRecipes([]);
-    };
-
-    const handleToggleFavorite = (recipeId) => {
-        console.log(`Toggle favorite status for recipe ID: ${recipeId}`);
+        // Clear disliked IDs for the new search
+        addDislikedRecipeIds([]);
     };
 
     const handleDislike = async () => {
@@ -96,7 +95,7 @@ export default function SearchResultsPage() {
                 title="Suggested recipes"
                 recipes={recipes}
                 loading={loading}
-                onToggleFavorite={handleToggleFavorite}
+                onToggleFavorite={toggleFavorite}
                 emptyMessage="No recipes found. Try a different search."
             />
 

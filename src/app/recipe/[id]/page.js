@@ -4,15 +4,16 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ArrowLeft, Heart, Clock, Image as DefaultImage } from "lucide-react";
 import { useRecipes } from "@/contexts/RecipiesContext";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 export default function Page() {
     const params = useParams();
     const router = useRouter();
-    const { getRecipeById } = useRecipes();
+    const { getRecipeById, favorites, toggleFavorite } = useRecipes();
+    const { data: session } = useSession();
 
     const [recipe, setRecipe] = useState(null);
-    const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         const recipeData = getRecipeById(params.id);
@@ -23,13 +24,30 @@ export default function Page() {
         }
     }, [params.id, getRecipeById, router]);
 
+    // Check if this recipe is in favorites
+    const isRecipeFavorite = favorites.some(
+        (fav) => fav.recipeId === recipe?.id
+    );
+
     const handleBack = () => {
         router.back();
     };
 
-    const handleToggleFavorite = () => {
-        setIsFavorite(!isFavorite);
-        console.log("Toggle favorite for recipe:", recipe?.id);
+    const handleToggleFavorite = async () => {
+        if (!session) {
+            console.log("Please sign in to add favorites");
+            // Optionally redirect to signin or show a toast
+            return;
+        }
+
+        if (!recipe) return;
+
+        try {
+            await toggleFavorite(recipe);
+            console.log("Toggled favorite for recipe:", recipe.id);
+        } catch (error) {
+            console.error("Error toggling favorite:", error);
+        }
     };
 
     if (!recipe) {
@@ -89,11 +107,16 @@ export default function Page() {
                             <button
                                 onClick={handleToggleFavorite}
                                 className="p-2 hover:bg-gray-50 rounded-full transition-colors flex-shrink-0"
+                                aria-label={
+                                    isRecipeFavorite
+                                        ? "Remove from favorites"
+                                        : "Add to favorites"
+                                }
                             >
                                 <Heart
                                     size={24}
                                     className={`transition-colors ${
-                                        isFavorite
+                                        isRecipeFavorite
                                             ? "fill-red-500 text-red-500"
                                             : "text-gray-400 hover:text-red-500"
                                     }`}
@@ -102,7 +125,9 @@ export default function Page() {
                         </div>
                         <div className="flex items-center gap-2 text-gray-600">
                             <Clock size={18} />
-                            <span>{recipe.time}</span>
+                            <span>
+                                {recipe.time || recipe.cookTime || "20 min"}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -128,7 +153,7 @@ export default function Page() {
                                         className="flex items-start"
                                     >
                                         <span className="text-primary mr-2">
-                                            {index + 1}.
+                                            •
                                         </span>
                                         <span className="text-gray-700">
                                             {ingredient}

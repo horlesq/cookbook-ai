@@ -3,6 +3,8 @@
 import { Image as DefaultIamge, Heart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useRecipes } from "@/contexts/RecipiesContext";
+import { useSession } from "next-auth/react";
 
 export default function ListItem({
     recipe,
@@ -10,10 +12,30 @@ export default function ListItem({
     onToggleFavorite,
 }) {
     const router = useRouter();
+    const { toggleFavorite, favorites } = useRecipes();
+    const { data: session } = useSession();
 
-    const handleFavoriteClick = (e) => {
+    // Check if this recipe is in favorites
+    const isRecipeFavorite = favorites.some(
+        (fav) => fav.recipeId === recipe.id
+    );
+
+    const handleFavoriteClick = async (e) => {
+        console.log("Recipe object:", recipe); // This shows the full recipe is available
         e.stopPropagation();
-        onToggleFavorite?.(recipe.id);
+
+        if (!session) {
+            console.log("Please sign in to add favorites");
+            return;
+        }
+
+        if (onToggleFavorite) {
+            // Pass the full recipe object, not just the ID
+            onToggleFavorite(recipe);
+        } else {
+            // Use the context toggleFavorite
+            await toggleFavorite(recipe);
+        }
     };
 
     const handleClick = () => {
@@ -53,13 +75,15 @@ export default function ListItem({
                 onClick={handleFavoriteClick}
                 className="flex-shrink-0 p-2 hover:bg-gray-50 rounded-full transition-colors"
                 aria-label={
-                    isFavorite ? "Remove from favorites" : "Add to favorites"
+                    isRecipeFavorite
+                        ? "Remove from favorites"
+                        : "Add to favorites"
                 }
             >
                 <Heart
                     size={20}
                     className={`transition-colors ${
-                        isFavorite
+                        isRecipeFavorite
                             ? "fill-primary text-primary"
                             : "text-gray-400 hover:text-primary"
                     }`}
