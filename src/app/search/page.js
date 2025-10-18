@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useRecipes } from "@/contexts/RecipiesContext";
 import SearchBar from "@/components/SearchBar";
 import List from "@/components/List";
+import RefreshButton from "@/components/RefreshButton";
 
 export default function Page() {
     const searchParams = useSearchParams();
@@ -49,11 +50,7 @@ export default function Page() {
             />
 
             {!loading && recipes.length > 0 && (
-                <div className="text-center">
-                    <button onClick={handleDislike} className="btn-primary">
-                        I don&apos;t like these
-                    </button>
-                </div>
+                <RefreshButton onDislike={handleDislike} disabled={!query} />
             )}
         </div>
     );
