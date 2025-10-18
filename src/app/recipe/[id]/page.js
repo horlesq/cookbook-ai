@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 export default function Page() {
     const params = useParams();
     const router = useRouter();
-    const { getRecipeById, favorites } = useRecipes();
+    const { getRecipeById, favorites, toggleFavorite } = useRecipes();
     const { data: session } = useSession();
 
     const [recipe, setRecipe] = useState(null);

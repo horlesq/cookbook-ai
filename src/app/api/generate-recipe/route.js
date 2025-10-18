@@ -98,7 +98,7 @@ export async function POST(request) {
                 },
             ],
 
-            temperature: 0.7,
+            temperature: 0.8,
         });
 
         const aiResponseText = completion.choices[0].message.content;

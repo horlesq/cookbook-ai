@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import { useRecipes } from "@/contexts/RecipiesContext";
 import SpinnerMini from "./SpinnerMini";
 
 export default function SearchBar({ loading, initialQuery = "" }) {
@@ -12,6 +12,7 @@ export default function SearchBar({ loading, initialQuery = "" }) {
         "What do you feel like eating?"
     );
     const router = useRouter();
+    const { fetchRecipes } = useRecipes();
 
     useEffect(() => {
         const updatePlaceholder = () => {
@@ -30,11 +31,15 @@ export default function SearchBar({ loading, initialQuery = "" }) {
         return () => window.removeEventListener("resize", updatePlaceholder);
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!query.trim() || loading) return;
 
+        // Update URL first
         router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+
+        // Then fetch recipes directly
+        await fetchRecipes(query.trim());
     };
 
     return (

@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 const RecipesContext = createContext();
 
@@ -71,6 +72,41 @@ export function RecipesProvider({ children }) {
             }
         } catch (error) {
             console.error("Error fetching favorites:", error);
+        }
+    };
+
+    const fetchRecipes = async (searchQuery, excludeIds = []) => {
+        if (!searchQuery.trim()) return;
+
+        setLoading(true);
+        try {
+            const response = await fetch("/api/generate-recipe", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    query: searchQuery,
+                    excludeIds: excludeIds,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch recipes.");
+            }
+
+            const data = await response.json();
+            setRecipes(data.recipes || []);
+
+            if (data.recipes.length === 0) {
+                toast.error("No recipes found. Try a different search.");
+            }
+        } catch (error) {
+            console.error("Error fetching recipes:", error);
+            toast.error("Failed to load recipes");
+            setRecipes([]);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -160,6 +196,7 @@ export function RecipesProvider({ children }) {
                 favorites,
                 toggleFavorite,
                 fetchFavorites,
+                fetchRecipes,
             }}
         >
             {children}
