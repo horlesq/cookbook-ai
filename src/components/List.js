@@ -4,15 +4,11 @@ import ListItemSkeleton from "./ListItemSkeleton";
 export default function List({
     title,
     recipes = [],
-    favorites = [],
     onToggleFavorite,
     emptyMessage = "No recipes found",
-    showFavorites = false,
     loading = false,
     skeletonCount = 5,
 }) {
-    const isFavorite = (recipeId) => favorites.includes(recipeId);
-
     return (
         <div className="w-full">
             {title && (
@@ -37,7 +33,6 @@ export default function List({
                         <ListItem
                             key={recipe.id}
                             recipe={recipe}
-                            isFavorite={showFavorites || isFavorite(recipe.id)}
                             onToggleFavorite={onToggleFavorite}
                         />
                     ))}

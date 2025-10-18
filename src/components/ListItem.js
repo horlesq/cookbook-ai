@@ -1,51 +1,12 @@
 "use client";
 
-import { Image as DefaultIamge, Heart } from "lucide-react";
+import { Image as DefaultIamge } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRecipes } from "@/contexts/RecipiesContext";
-import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
+import FavoriteButton from "./FavoriteButton";
 
-export default function ListItem({
-    recipe,
-    isFavorite = false,
-    onToggleFavorite,
-}) {
+export default function ListItem({ recipe, onToggleFavorite }) {
     const router = useRouter();
-    const { toggleFavorite, favorites } = useRecipes();
-    const { data: session } = useSession();
-
-    // Check if this recipe is in favorites
-    const isRecipeFavorite = favorites.some(
-        (fav) => fav.recipeId === recipe.id
-    );
-
-    const handleFavoriteClick = async (e) => {
-        e.stopPropagation();
-
-        if (!session) {
-            toast.error("Please sign in to add favorites");
-            return;
-        }
-
-        try {
-            if (onToggleFavorite) {
-                await onToggleFavorite(recipe);
-            } else {
-                await toggleFavorite(recipe);
-            }
-
-            if (isRecipeFavorite) {
-                toast.success("Removed from favorites");
-            } else {
-                toast.success("Added to favorites!");
-            }
-        } catch (error) {
-            console.error("Error toggling favorite:", error);
-            toast.error("Failed to update favorites");
-        }
-    };
 
     const handleClick = () => {
         router.push(`/recipe/${recipe.id}`);
@@ -80,24 +41,11 @@ export default function ListItem({
                 </p>
             </div>
 
-            <button
-                onClick={handleFavoriteClick}
-                className="flex-shrink-0 p-2 hover:bg-gray-50 rounded-full transition-colors"
-                aria-label={
-                    isRecipeFavorite
-                        ? "Remove from favorites"
-                        : "Add to favorites"
-                }
-            >
-                <Heart
-                    size={20}
-                    className={`transition-colors ${
-                        isRecipeFavorite
-                            ? "fill-primary text-primary"
-                            : "text-gray-400 hover:text-primary"
-                    }`}
-                />
-            </button>
+            <FavoriteButton
+                recipe={recipe}
+                size={20}
+                onToggleFavorite={onToggleFavorite}
+            />
         </div>
     );
 }

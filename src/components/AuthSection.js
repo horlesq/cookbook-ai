@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LogOut, LogIn } from "lucide-react";
 import toast from "react-hot-toast";
+import ConfirmationModal from "./ConfirmationModal";
 
 export default function AuthSection({ isMobile = false, onMobileClose }) {
     const { data: session, status } = useSession();
@@ -51,40 +52,15 @@ export default function AuthSection({ isMobile = false, onMobileClose }) {
                     Sign Out
                 </button>
 
-                {/* Confirmation Modal */}
-                {showConfirmation && (
-                    <div
-                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-                        onClick={() => setShowConfirmation(false)}
-                    >
-                        <div
-                            className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 space-y-4"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <h3 className="text-xl font-bold text-gray-900">
-                                Sign Out?
-                            </h3>
-                            <p className="text-gray-600">
-                                Are you sure you want to sign out of your
-                                account?
-                            </p>
-                            <div className="flex gap-3 pt-2">
-                                <button
-                                    onClick={() => setShowConfirmation(false)}
-                                    className="flex-1 px-4 py-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors font-medium"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={handleSignOut}
-                                    className="flex-1 px-4 py-2 rounded-full bg-primary text-white hover:bg-secondary transition-colors font-medium"
-                                >
-                                    Sign Out
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+                <ConfirmationModal
+                    isOpen={showConfirmation}
+                    onClose={() => setShowConfirmation(false)}
+                    onConfirm={handleSignOut}
+                    title="Sign Out?"
+                    message="Are you sure you want to sign out of your account?"
+                    confirmText="Sign Out"
+                    cancelText="Cancel"
+                />
             </>
         );
     }

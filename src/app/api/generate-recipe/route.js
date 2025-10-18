@@ -72,7 +72,7 @@ export async function POST(request) {
         {
           "recipes": [
             {
-              "id": number, // Unique ID (e.g., 100, 101, 102). Use a random 3-digit number that hasn't been used before.
+              "id": number, // UNIQUE ID (generate a random 5-digit number)
               "name": string, // Creative name for the dish
               "time": string, // Estimated preparation and cooking time (e.g., "30 min")
               "ingredients": [string array], // Full list of ingredients with measurements
