@@ -36,7 +36,7 @@ A full-stack web application that uses AI to generate personalized recipes based
 - **Tailwind CSS** - Styling
 - **NextAuth.js** - Authentication
 - **MongoDB** - Database with Mongoose ODM
-- **OpenAI API** - AI recipe generation
+- **Groq API** - AI recipe generation
 
 ## Installation
 
@@ -66,7 +66,7 @@ npm install
 # Create .env.local file with:
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-secret-key
-OPENAI_API_KEY=your-openai-api-key
+GROQ_API_KEY=your-groq-api-key
 PEXELS_API_KEY=your-pexels-api-key
 MONGODB_URI=your-mongodb-connection-string
 ```
