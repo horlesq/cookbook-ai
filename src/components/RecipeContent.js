@@ -37,7 +37,7 @@ export default function RecipeContent({ recipe }) {
                     <ol className="space-y-4">
                         {recipe.instructions.map((instruction, index) => (
                             <li key={index} className="flex items-start">
-                                <span className="font-semibold text-primary mr-3 min-w-[24px]">
+                                <span className="font-semibold text-primary min-w-[24px]">
                                     {index + 1}.
                                 </span>
                                 <span className="text-gray-700">
