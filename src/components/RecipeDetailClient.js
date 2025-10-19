@@ -8,7 +8,7 @@ import RecipeImage from "./RecipeImage";
 import RecipeDescription from "./RecipeDescription";
 import RecipeIngredients from "./RecipeIngredients";
 import RecipeInstructions from "./RecipeInstructions";
-import RecipeDetailSkeleton from "./RecipeDetailSkeleton";
+import Spinner from "./Spinner";
 
 export default function RecipeDetailClient({ recipeId }) {
     const params = useParams();
@@ -59,7 +59,7 @@ export default function RecipeDetailClient({ recipeId }) {
     };
 
     if (loading) {
-        return <RecipeDetailSkeleton />;
+        return <Spinner />;
     }
 
     if (!recipe) {
