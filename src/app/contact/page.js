@@ -28,8 +28,8 @@ export default function Page() {
                     <span className="font-semibold text-primary">
                         {developerInfo.name}
                     </span>
-                    , a full-stack developer passionate about building modern
-                    fullstack applications. Whether you have a project in mind
+                    , a software developer passionate about building modern
+                    full-stack applications. Whether you have a project in mind
                     or just want to say hello, feel free to reach out.
                 </p>
             </section>
