@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
+import Groq from "groq-sdk";
 
-const deepseek = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-    baseURL: "https://api.deepseek.com/v1",
+const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY,
 });
 
 function safeParseJson(jsonString) {
@@ -86,8 +85,8 @@ export async function POST(request) {
     `;
 
     try {
-        const completion = await deepseek.chat.completions.create({
-            model: "deepseek-chat",
+        const completion = await groq.chat.completions.create({
+            model: "llama-3.1-8b-instant", 
             messages: [
                 { role: "system", content: systemInstruction },
                 {
@@ -97,8 +96,8 @@ export async function POST(request) {
                     }recipes based on: ${query}`,
                 },
             ],
-
             temperature: 0.8,
+            response_format: { type: "json_object" },
         });
 
         const aiResponseText = completion.choices[0].message.content;
@@ -121,7 +120,7 @@ export async function POST(request) {
             recipes: recipesWithImages,
         });
     } catch (error) {
-        console.error("DeepSeek Generation Error:", error);
+        console.error("Groq Generation Error:", error);
         return NextResponse.json(
             { error: "Failed to generate recipes from AI." },
             { status: 500 }
