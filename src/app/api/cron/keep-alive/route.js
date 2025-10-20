@@ -1,4 +1,3 @@
-
 import connectDB from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
@@ -10,11 +9,11 @@ export async function GET(request) {
     }
 
     try {
-        // Connect to database and perform a simple query
-        const { db } = await connectDB();
+        // Connect to database
+        const conn = await connectDB();
 
         // Ping the database to keep it active
-        await db.command({ ping: 1 });
+        await conn.connection.db.admin().ping();
 
         console.log(
             "Database keep-alive ping successful:",
