@@ -1,4 +1,5 @@
-import { connectToDatabase } from "@/lib/mongodb";
+
+import connectDB from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -10,7 +11,7 @@ export async function GET(request) {
 
     try {
         // Connect to database and perform a simple query
-        const { db } = await connectToDatabase();
+        const { db } = await connectDB();
 
         // Ping the database to keep it active
         await db.command({ ping: 1 });
