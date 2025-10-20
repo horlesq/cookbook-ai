@@ -1,0 +1,36 @@
+name: Keep Database Alive
+
+on:
+    schedule:
+        # Runs every 7 days at midnight UTC
+        - cron: "0 0 */7 * *"
+    workflow_dispatch: # Allows manual triggering
+
+jobs:
+    ping-database:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Ping Database Endpoint
+              run: |
+                  response=$(curl -s -w "\n%{http_code}" -X GET \
+                    -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+                    https://cookbook-ai-delta.vercel.app/api/cron/keep-alive)
+
+                  http_code=$(echo "$response" | tail -n1)
+                  body=$(echo "$response" | sed '$d')
+
+                  echo "Response: $body"
+                  echo "HTTP Status: $http_code"
+
+                  if [ "$http_code" != "200" ]; then
+                    echo "Error: Database ping failed with status $http_code"
+                    exit 1
+                  fi
+
+                  echo "Database ping successful!"
+
+            - name: Send notification on failure
+              if: failure()
+              run: |
+                  echo "Database keep-alive ping failed. Check logs for details."
